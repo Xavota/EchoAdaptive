@@ -1,42 +1,85 @@
 #include "SoundMixer.h"
 
-uint32_t
+SoundMixerChannel*
 SoundMixer::addChannel()
 {
   uint32_t index = m_channels.size();
   m_channels.emplace_back(SoundMixerChannel());
   m_channels[index].setChannelIndex(index);
-  return index;
-}
-
-uint32_t
-SoundMixer::addChannelTrack(uint32_t channelIndex,
-                            FMODSound* sound,
-                            float startingPoint)
-{
-  return m_channels[channelIndex].addTrack(sound, startingPoint);
-}
-
-void
-SoundMixer::setChannelPaused(uint32_t channelIndex, bool paused)
-{
-  m_channels[channelIndex].setPaused(paused);
+  return &m_channels[index];
 }
 
 void
 SoundMixer::writeSoundData(float* data, int count)
 {
+  if (m_isPaused || !m_isPlaying) return;
+
   for (auto& c : m_channels) {
     c.writeSoundData(this, data, count);
+  }
+
+  for (int i = 0; i < count; ++i) {
+    data[i] *= m_volume;
   }
 }
 
 void
 SoundMixer::play()
 {
-  for (auto& c : m_channels) {
-    if (c.getPlayOnStart()) {
-      c.setPaused(false);
+  if (!m_isPlaying) {
+    for (auto& c : m_channels) {
+      c.start();
     }
+  }
+  else {
+    for (auto& c : m_channels) {
+      if (c.getIsPlaying()) {
+        c.play();
+      }
+    }
+  }
+
+  m_isPlaying = true;
+  m_isPaused = false;
+}
+
+void
+SoundMixer::pause()
+{
+  m_isPaused = true;
+
+  for (auto& c : m_channels) {
+    c.pause();
+  }
+}
+
+void
+SoundMixer::stop()
+{
+  m_isPlaying = false;
+  m_isPaused = true;
+
+  for (auto& c : m_channels) {
+    c.restart();
+  }
+}
+
+bool
+SoundMixer::getIsPlaying()
+{
+  return m_isPlaying;
+}
+
+bool
+SoundMixer::getIsPaused()
+{
+  return m_isPaused;
+}
+
+void
+SoundMixer::update(float dt)
+{
+  if (!m_isPlaying || m_isPaused) {
+    m_eventGraph.eventGraph(this, dt);
   }
 }

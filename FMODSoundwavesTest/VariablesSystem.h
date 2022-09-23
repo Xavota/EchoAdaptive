@@ -3,51 +3,34 @@
 
 using Byte = char;
 
-namespace eVAR_TYPE {
-enum E
-{
-  kNone = 0,
-  kInt,
-  kShortInt,
-  kLongInt,
-  kLongLong,
-  kFloat,
-  kDouble,
-  kLongDouble,
-  kBool,
-  kChar,
-  kString,
-  kWChar,
-  kWString,
-  kMixerPointer,
-  kMixerChannelPointer
-};
-}
-
 class VariableClass
 {
  public:
   VariableClass() = default;
   ~VariableClass() = default;
 
+  template<typename T>
   void
-  setType(eVAR_TYPE::E type);
-  void
-  setData(void* data);
+  setData(const T& data);
+  template<typename T>
+  const T&
+  getData();
 
  private:
-  eVAR_TYPE::E m_type;
-  int m_size;
   std::vector<Byte> m_data;
 };
-
-class VariablesSystem
+template<typename T>
+void
+VariableClass::setData(const T& data)
 {
- public:
-  VariablesSystem() = default;
-  ~VariablesSystem() = default;
-
- private:
-  
-};
+  m_data.clear();
+  m_data.resize(sizeof(T), 0);
+  memcpy(m_data.data(), &data, sizeof(T));
+}
+template<typename T>
+const T&
+VariableClass::getData()
+{
+  return *reinterpret_cast<T*>(m_data.data());
+}
 

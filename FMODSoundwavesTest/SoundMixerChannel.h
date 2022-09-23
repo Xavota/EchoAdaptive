@@ -30,13 +30,39 @@ class SoundMixerChannel
   moveTrack(uint32_t index, float startingPoint);
 
   void
-  addEvent(float position, AudioEvent* audioEvent);
+  addEvent(AudioEvent* audioEvent, float fisrtPos, float lastPos = -1.0f);
 
   void
   setTimePosition(float timePos);
-
+  inline void
+  setStartingPosition(float timePos)
+  {
+    m_startingPosition = timePos;
+  }
+  
   void
-  setPaused(bool _paused);
+  start();
+  void
+  play();
+  void
+  pause();
+
+  inline bool
+  getIsPlaying()
+  {
+    return m_isPlaying;
+  }
+
+  inline bool
+  getPlayOnStart()
+  {
+    return m_playOnStart;
+  }
+  inline void
+  setPlayOnStart(bool playOn)
+  {
+    m_playOnStart = playOn;
+  }
 
   void
   writeSoundData(SoundMixer* mixer, float* data, int count);
@@ -66,16 +92,8 @@ class SoundMixerChannel
     return m_tracks;
   }
 
-  inline bool
-  getPlayOnStart()
-  {
-    return m_playOnStart;
-  }
-  inline void
-  setPlayOnStart(bool playOn)
-  {
-    m_playOnStart = playOn;
-  }
+  void
+  restart();
 
  private:
   void
@@ -85,7 +103,9 @@ class SoundMixerChannel
   std::vector<AudioTrack> m_tracks;
 
   float m_position = 0.0f;
+  float m_startingPosition = 0.0f;
 
+  bool m_isPlaying = false;
   bool m_paused = false;
 
   float m_volume = 1.0f;
@@ -94,7 +114,7 @@ class SoundMixerChannel
   float m_rightGain = SQRT2_2;
   float m_pan = 0.0f;
 
-  std::map<float, AudioEvent*> m_events;
+  std::vector<AudioEvent*> m_events;
 
 
   bool m_changePositionRequest = false;

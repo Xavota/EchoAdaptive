@@ -21,9 +21,17 @@ SoundMixerChannel::moveTrack(uint32_t index, float startingPoint)
 }
 
 void
-SoundMixerChannel::addEvent(float position, AudioEvent* audioEvent)
+SoundMixerChannel::addEvent(AudioEvent* audioEvent,
+                            float fisrtPos,
+                            float lastPos)
 {
-  m_events[position * DEF_FREQ] = audioEvent;
+  if (lastPos < 0.0f) {
+    lastPos = fisrtPos;
+  }
+
+  m_events.push_back(audioEvent);
+  audioEvent->setFirstTime(fisrtPos * DEF_FREQ);
+  audioEvent->setLastTime(lastPos * DEF_FREQ);
 }
 
 void
@@ -33,15 +41,40 @@ SoundMixerChannel::setTimePosition(float timePos)
   m_pendingNewPosition = timePos * DEF_FREQ;
 }
 
-void SoundMixerChannel::setPaused(bool _paused)
+void
+SoundMixerChannel::start()
 {
-  m_paused = _paused;
+  if (m_playOnStart) {
+    play();
+  }
+}
+void
+SoundMixerChannel::play()
+{
+  m_isPlaying = true;
+  m_paused = false;
+}
+void
+SoundMixerChannel::pause()
+{
+  m_paused = true;
+}
+void
+SoundMixerChannel::restart()
+{
+  m_position = m_startingPosition;
+  m_paused = true;
+  m_isPlaying = false;
+
+  for (auto& e : m_events) {
+    e->restart();
+  }
 }
 
 void
 SoundMixerChannel::writeSoundData(SoundMixer* mixer, float* data, int count)
 {
-  if (m_paused) return;
+  if (m_paused || !m_isPlaying) return;
 
   if (m_changePositionRequest) {
     m_position = m_pendingNewPosition;
@@ -67,8 +100,9 @@ SoundMixerChannel::writeSoundData(SoundMixer* mixer, float* data, int count)
     }
 
     for (auto& e : m_events) {
-      if (truePos == static_cast<U32>(e.first)) {
-        e.second->triggerEvent(mixer, m_channelIndex);
+      if (truePos >= static_cast<U32>(e->getFirstTime())
+       && truePos <= static_cast<U32>(e->getLastTime())) {
+        e->triggerEvent(mixer, m_channelIndex);
       }
     }
     m_position += 1;
@@ -78,7 +112,6 @@ SoundMixerChannel::writeSoundData(SoundMixer* mixer, float* data, int count)
     }
   }
 }
-
 
 void
 SoundMixerChannel::updatePan()

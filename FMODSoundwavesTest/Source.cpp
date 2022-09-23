@@ -139,9 +139,9 @@ struct ImTextQueue
 };
 
 void
-DrawImgui(sf::RenderWindow* window, sf::Clock deltaClock)
+DrawImgui(sf::RenderWindow* window, sf::Time deltaTime)
 {
-  ImGui::SFML::Update(*window, deltaClock.restart());
+  ImGui::SFML::Update(*window, deltaTime);
   
   int pushId = 0;
 
@@ -241,45 +241,45 @@ main()
   //uint32_t channMix1 = mixer.addChannel();
   //mixer.setChannelPaused(channMix1, false);
   //mixer.addChannelTrack(channMix1, &sound);
-  uint32_t channMix2 = mixer.addChannel();
-  mixer.addChannelTrack(channMix2, &sound3, bit * 0);
-  mixer.addChannelTrack(channMix2, &sound2, bit * 1);
-  mixer.addChannelTrack(channMix2, &sound2, bit * 2);
-  mixer.addChannelTrack(channMix2, &sound3, bit * 3);
-  mixer.addChannelTrack(channMix2, &sound2, bit * 4);
-  mixer.addChannelTrack(channMix2, &sound2, bit * 5);
-  mixer.addChannelTrack(channMix2, &sound3, bit * 6);
-  mixer.addChannelTrack(channMix2, &sound2, bit * 7);
+  auto channMix2 = mixer.addChannel();
+  channMix2->addTrack(&sound3, bit * 0);
+  channMix2->addTrack(&sound2, bit * 1);
+  channMix2->addTrack(&sound2, bit * 2);
+  channMix2->addTrack(&sound3, bit * 3);
+  channMix2->addTrack(&sound2, bit * 4);
+  channMix2->addTrack(&sound2, bit * 5);
+  channMix2->addTrack(&sound3, bit * 6);
+  channMix2->addTrack(&sound2, bit * 7);
   AudioEventLoop* loopEvent = new AudioEventLoop();
-  loopEvent->setFloatVariable("StartLoopTime", 0.0f);
-  mixer.getChannel(channMix2)->addEvent(bit * 8, loopEvent);
+  loopEvent->setVariable<float>("StartLoopTime", 0.0f);
+  channMix2->addEvent(loopEvent, bit * 8);
 
 
-  uint32_t channMix3 = mixer.addChannel();
-  mixer.addChannelTrack(channMix3, &NoteF,  bit * 32);
-  mixer.addChannelTrack(channMix3, &NoteA,  bit * 32);
-  mixer.addChannelTrack(channMix3, &NoteC,  bit * 32);
+  auto channMix3 = mixer.addChannel();
+  channMix3->addTrack(&NoteF, bit * 32);
+  channMix3->addTrack(&NoteA, bit * 32);
+  channMix3->addTrack(&NoteC, bit * 32);
 
-  mixer.addChannelTrack(channMix3, &NoteD,  bit * 48);
-  mixer.addChannelTrack(channMix3, &NoteF,  bit * 48);
-  mixer.addChannelTrack(channMix3, &NoteA,  bit * 48);
+  channMix3->addTrack(&NoteD, bit * 48);
+  channMix3->addTrack(&NoteF, bit * 48);
+  channMix3->addTrack(&NoteA, bit * 48);
 
-  mixer.addChannelTrack(channMix3, &NoteG,  bit * 64);
-  mixer.addChannelTrack(channMix3, &NoteAS, bit * 64);
-  mixer.addChannelTrack(channMix3, &NoteD,  bit * 64);
+  channMix3->addTrack(&NoteG, bit * 64);
+  channMix3->addTrack(&NoteAS, bit * 64);
+  channMix3->addTrack(&NoteD, bit * 64);
 
-  mixer.addChannelTrack(channMix3, &NoteAS, bit * 80);
-  mixer.addChannelTrack(channMix3, &NoteD,  bit * 80);
-  mixer.addChannelTrack(channMix3, &NoteF,  bit * 80);
+  channMix3->addTrack(&NoteAS, bit * 80);
+  channMix3->addTrack(&NoteD, bit * 80);
+  channMix3->addTrack(&NoteF, bit * 80);
 
-  mixer.addChannelTrack(channMix3, &NoteC,  bit * 88);
-  mixer.addChannelTrack(channMix3, &NoteE,  bit * 88);
-  mixer.addChannelTrack(channMix3, &NoteG,  bit * 88);
+  channMix3->addTrack(&NoteC, bit * 88);
+  channMix3->addTrack(&NoteE, bit * 88);
+  channMix3->addTrack(&NoteG,  bit * 88);
   AudioEventLoop* loopEvent2 = new AudioEventLoop();
-  loopEvent2->setFloatVariable("StartLoopTime", bit * 32);
-  mixer.getChannel(channMix3)->addEvent(bit * 96, loopEvent2);
+  loopEvent2->setVariable<float>("StartLoopTime", bit * 32);
+  channMix3->addEvent(loopEvent2, bit * 96);
 
-  uint32_t channMix4 = mixer.addChannel();
+  //auto channMix4 = mixer.addChannel();
 
 
 
@@ -371,7 +371,10 @@ main()
       }
     }
 
-    DrawImgui(&window, deltaClock);
+    sf::Time deltaTime = deltaClock.restart();
+    DrawImgui(&window, deltaTime);
+
+    mixer.update(deltaTime.asSeconds());
 
     if (ctrlPressed) {
       soundDisp.zoom(wheelDelta);

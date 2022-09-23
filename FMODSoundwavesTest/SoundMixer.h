@@ -3,6 +3,8 @@
 
 #include "SoundMixerChannel.h"
 
+#include "AudioMixerEventGraph.h"
+
 class FMODSound;
 
 class SoundMixer
@@ -11,16 +13,8 @@ class SoundMixer
   SoundMixer() = default;
   ~SoundMixer() = default;
 
-  uint32_t
+  SoundMixerChannel*
   addChannel();
-
-  uint32_t
-  addChannelTrack(uint32_t channelIndex,
-                  FMODSound* track,
-                  float startingPoint = 0.0f);
-
-  void
-  setChannelPaused(uint32_t channelIndex, bool paused);
 
   inline SoundMixerChannel*
   getChannel(uint32_t channelIndex)
@@ -38,8 +32,35 @@ class SoundMixer
 
   void
   play();
+  void
+  pause();
+  void
+  stop();
+
+  bool
+  getIsPlaying();
+  bool
+  getIsPaused();
+  
+  float
+  getVolume() const { return m_volume; }
+  void
+  setVolume(float value)
+  {
+    m_volume = value;
+  }
+
+  void
+  update(float dt);
 
  private:
   std::vector<SoundMixerChannel> m_channels;
+
+  AudioMixerEventGraph m_eventGraph;
+
+  bool m_isPlaying = false;
+  bool m_isPaused = false;
+
+  float m_volume = 1.0f;
 };
 
