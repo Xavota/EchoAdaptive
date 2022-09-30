@@ -5,7 +5,7 @@
 
 #include "AudioMixerEventGraph.h"
 
-class FMODSound;
+struct FMODSound;
 
 class SoundMixer
 {
@@ -24,7 +24,7 @@ class SoundMixer
   inline uint32_t
   getChannelCount()
   {
-    return m_channels.size();
+    return static_cast<uint32_t>(m_channels.size());
   }
 
   void

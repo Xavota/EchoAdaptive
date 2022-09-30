@@ -1,7 +1,7 @@
 #pragma once
 #include "Prerrequisites.h"
 
-class FMODSound;
+struct FMODSound;
 
 class SoundEditor
 {

@@ -12,9 +12,9 @@ SoundChannel::PlaySound(FMODSound* mySound, float _paused)
   paused = _paused;
 }
 void
-SoundChannel::PlaySyntheticSound(SynthetiseSound* sound)
+SoundChannel::PlaySyntheticSound(SynthetiseSound* _sound)
 {
-  syntheticSound = sound;
+  syntheticSound = _sound;
 }
 void
 SoundChannel::Stop()
@@ -49,7 +49,7 @@ SoundChannel::WriteSoundData(float* data, int count, float parentPitch)
   //  if (eff) eff->applyPreEffect(effectSoundData, sound->count);
   //}
 
-  for (U32 i = 0; i < count; i += 2) {
+  for (int i = 0; i < count; i += 2) {
     U32 realPosition = static_cast<U32>(position)
                      * static_cast<U32>(sound->numChannels);
     // If we have reached the end of the sound, stop and return

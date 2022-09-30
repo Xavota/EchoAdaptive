@@ -3,7 +3,7 @@
 SoundMixerChannel*
 SoundMixer::addChannel()
 {
-  uint32_t index = m_channels.size();
+  auto index = static_cast<U32>(m_channels.size());
   m_channels.emplace_back(SoundMixerChannel());
   m_channels[index].setChannelIndex(index);
   return &m_channels[index];

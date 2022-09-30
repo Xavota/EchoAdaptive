@@ -42,5 +42,6 @@ AudioMixerEventGraph::getVariable(const std::string& name)
   if (m_vars.find(name) != m_vars.end()) {
     return m_vars[name].getData<T>();
   }
-  return T();
+  setVariable<T>(name, T());
+  return m_vars[name].getData<T>();
 }

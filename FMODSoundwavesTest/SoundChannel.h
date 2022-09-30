@@ -28,7 +28,7 @@ public:
   void
   PlaySound(FMODSound* mySound, float _paused = false);
   void
-  PlaySyntheticSound(SynthetiseSound* sound);
+  PlaySyntheticSound(SynthetiseSound* _sound);
   void
   Stop();
   void
@@ -92,36 +92,36 @@ public:
   getMaxPositionSec()
   {
     if (sound) {
-      return sound->count / (sound->samplingRate * sound->numChannels);
+      return static_cast<float>(sound->count / (sound->samplingRate * sound->numChannels));
     }
     else {
-      return 0;
+      return 0.0f;
     }
   }
   float
   getMaxPositionFreq()
   {
     if (sound) {
-      return sound->count / sound->numChannels;
+      return static_cast<float>(sound->count / sound->numChannels);
     }
     else {
-      return 0;
+      return 0.0f;
     }
   }
   void
   seek(float second)
   {
     if (sound) {
-      seekFreq(second * sound->samplingRate);
+      seekFreq(static_cast<U32>(second) * sound->samplingRate);
     }
     else {
-      seekFreq(second * DEF_FREQ);
+      seekFreq(static_cast<U32>(second) * DEF_FREQ);
     }
   }
   void
   seekFreq(U32 freq)
   {
-    position = freq;
+    position = static_cast<float>(freq);
   }
 
   void

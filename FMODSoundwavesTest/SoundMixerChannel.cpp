@@ -5,7 +5,7 @@
 uint32_t
 SoundMixerChannel::addTrack(FMODSound* track, float startingPoint)
 {
-  uint32_t index = m_tracks.size();
+  auto index = static_cast<U32>(m_tracks.size());
 
   m_tracks.emplace_back(AudioTrack());
   m_tracks[index].setSound(track);
@@ -34,8 +34,25 @@ SoundMixerChannel::addEvent(AudioEvent* audioEvent,
   audioEvent->setLastTime(lastPos * DEF_FREQ);
 }
 
+float
+SoundMixerChannel::getTimePositionFreq()
+{
+  return m_position;
+}
+float
+SoundMixerChannel::getTimePositionSec()
+{
+  return m_position / DEF_FREQ;
+}
+
 void
-SoundMixerChannel::setTimePosition(float timePos)
+SoundMixerChannel::setTimePositionFreq(float timePos)
+{
+  m_changePositionRequest = true;
+  m_pendingNewPosition = timePos;
+}
+void
+SoundMixerChannel::setTimePositionSec(float timePos)
 {
   m_changePositionRequest = true;
   m_pendingNewPosition = timePos * DEF_FREQ;
@@ -81,7 +98,7 @@ SoundMixerChannel::writeSoundData(SoundMixer* mixer, float* data, int count)
     m_changePositionRequest = false;
   }
 
-  for (U32 i = 0; i < count; i += 2) {
+  for (int i = 0; i < count; i += 2) {
     auto truePos = static_cast<U32>(m_position);
     //std::cout << truePos << std::endl;
     for (auto& t : m_tracks) {

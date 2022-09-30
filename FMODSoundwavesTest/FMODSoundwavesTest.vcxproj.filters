@@ -24,9 +24,6 @@
     <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SoundManager_Fmod.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Externals\imguiSFML\imgui.cpp">
       <Filter>Externals\ImGui</Filter>
     </ClCompile>
@@ -110,9 +107,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SoundManager_Fmod.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="FMODSound.h">
       <Filter>Header Files</Filter>
     </ClInclude>

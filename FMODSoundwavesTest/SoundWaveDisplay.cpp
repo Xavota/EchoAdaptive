@@ -62,7 +62,7 @@ SoundWaveDisplay::scroll(int scrll)
 void
 SoundWaveDisplay::zoom(int scrll)
 {
-  m_secondsInDisplay *= pow(0.25f, scrll);
+  m_secondsInDisplay *= static_cast<float>(pow(0.25f, scrll));
   m_sampleResolution =
   static_cast<int>(DEF_FREQ
                  / ((m_horizontalScreenSize * m_samplesPerPixel)
@@ -126,12 +126,12 @@ SoundWaveDisplay::render(sf::RenderWindow* window)
                              + (m_verticalSpaceBetweenChannels + maxChannelSize) * i;
       shapeLastPos = { 0.0f, midChannelHeight - soundData[0] * maxChannelSize * 0.5f };
       for (int j = m_sampleResolution * numChanns, k = 1;
-           j < m_soundsInDisplay[i]->count && k < maxSamplesWidth;
+           j < static_cast<int>(m_soundsInDisplay[i]->count) && k < maxSamplesWidth;
            j += m_sampleResolution * numChanns, ++k) {
         height = midChannelHeight - soundData[j] * maxChannelSize * 0.5f;
         newPos = { shapeLastPos.x + m_waveDX, height };
         dir = newPos - shapeLastPos;
-        dist = pow(pow(dir.x, 2) + pow(dir.y, 2), 0.5f);
+        dist = static_cast<float>(pow(pow(dir.x, 2) + pow(dir.y, 2), 0.5f));
         m_shape.setSize({ 1.0f, dist });
         angle = atan2(dir.y, dir.x) * 360 / 3.14159265f;
         m_shape.setRotation(angle);
@@ -147,12 +147,12 @@ SoundWaveDisplay::render(sf::RenderWindow* window)
                          + (m_verticalSpaceBetweenChannels + maxChannelSize) * i;
         shapeLastPos = { 0.0f, midChannelHeight - soundData[0] * maxChannelSize * 0.5f };
         for (int j = m_sampleResolution * numChanns, k = 1;
-             j < m_soundsInDisplay[i]->count && k < maxSamplesWidth;
+             j < static_cast<int>(m_soundsInDisplay[i]->count) && k < maxSamplesWidth;
              j += m_sampleResolution * numChanns, ++k) {
           height = midChannelHeight - soundData[j + 1] * maxChannelSize * 0.5f;
           newPos = { shapeLastPos.x + m_waveDX, height };
           dir = newPos - shapeLastPos;
-          dist = pow(pow(dir.x, 2) + pow(dir.y, 2), 0.5f);
+          dist = static_cast<float>(pow(pow(dir.x, 2) + pow(dir.y, 2), 0.5f));
           m_shape.setSize({ 1.0f, dist });
           angle = atan2(dir.y, dir.x) * 360 / 3.14159265f;
           m_shape.setRotation(angle);

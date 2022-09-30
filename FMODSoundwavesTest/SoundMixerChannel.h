@@ -31,13 +31,39 @@ class SoundMixerChannel
 
   void
   addEvent(AudioEvent* audioEvent, float fisrtPos, float lastPos = -1.0f);
+  inline const std::vector<AudioEvent*>&
+  getEvents()
+  {
+    return m_events;
+  }
 
+  float
+  getTimePositionFreq();
+  float
+  getTimePositionSec();
+  inline float
+  getStartingPositionFreq()
+  {
+    return m_startingPosition;
+  }
+  inline float
+  getStartingPositionSec()
+  {
+    return m_startingPosition / DEF_FREQ;
+  }
   void
-  setTimePosition(float timePos);
+  setTimePositionFreq(float timePos);
+  void
+  setTimePositionSec(float timePos);
   inline void
-  setStartingPosition(float timePos)
+  setStartingPositionFreq(float timePos)
   {
     m_startingPosition = timePos;
+  }
+  inline void
+  setStartingPositionSec(float timePos)
+  {
+    m_startingPosition = timePos * DEF_FREQ;
   }
   
   void
@@ -51,6 +77,11 @@ class SoundMixerChannel
   getIsPlaying()
   {
     return m_isPlaying;
+  }
+  inline bool
+  getIsPaused()
+  {
+    return m_paused;
   }
 
   inline bool

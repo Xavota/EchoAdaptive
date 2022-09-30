@@ -40,7 +40,6 @@
     <ClCompile Include="SoundChannelGroup.cpp" />
     <ClCompile Include="SoundEditor.cpp" />
     <ClCompile Include="SoundEffect.cpp" />
-    <ClCompile Include="SoundManager_Fmod.cpp" />
     <ClCompile Include="SoundMixer.cpp" />
     <ClCompile Include="SoundMixerChannel.cpp" />
     <ClCompile Include="SoundWaveDisplay.cpp" />
@@ -66,7 +65,6 @@
     <ClInclude Include="SoundChannelGroup.h" />
     <ClInclude Include="SoundEditor.h" />
     <ClInclude Include="SoundEffect.h" />
-    <ClInclude Include="SoundManager_Fmod.h" />
     <ClInclude Include="SoundMixer.h" />
     <ClInclude Include="SoundMixerChannel.h" />
     <ClInclude Include="SoundWaveDisplay.h" />

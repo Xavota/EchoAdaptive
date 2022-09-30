@@ -39,7 +39,7 @@ if (r != FMOD_OK) {                                                            \
 SoundMixer mixer;
 SoundChannelGroup masterChannelGroup;
 FMOD_RESULT F_CALLBACK
-WriteSoundData(FMOD_SOUND* sound, void* data, unsigned int length)
+WriteSoundData(FMOD_SOUND* /*sound*/, void* data, unsigned int length)
 {
   // Clear output
   memset(data, 0, length);
@@ -146,7 +146,7 @@ DrawImgui(sf::RenderWindow* window, sf::Time deltaTime)
   int pushId = 0;
 
   static AudioImGuiImpl audioImGui;
-  audioImGui.drawUI(&mixer, pushId);
+  audioImGui.drawUI(window, &mixer, pushId);
 
   //if (ImGui::Begin("Hello, world!")) {
   //  int id = 0;
@@ -241,45 +241,52 @@ main()
   //uint32_t channMix1 = mixer.addChannel();
   //mixer.setChannelPaused(channMix1, false);
   //mixer.addChannelTrack(channMix1, &sound);
-  auto channMix2 = mixer.addChannel();
-  channMix2->addTrack(&sound3, bit * 0);
-  channMix2->addTrack(&sound2, bit * 1);
-  channMix2->addTrack(&sound2, bit * 2);
-  channMix2->addTrack(&sound3, bit * 3);
-  channMix2->addTrack(&sound2, bit * 4);
-  channMix2->addTrack(&sound2, bit * 5);
-  channMix2->addTrack(&sound3, bit * 6);
-  channMix2->addTrack(&sound2, bit * 7);
+  auto channMix1 = mixer.addChannel();
+
+  channMix1->addTrack(&sound3, bit * 0);
+  channMix1->addTrack(&sound2, bit * 1);
+  channMix1->addTrack(&sound2, bit * 2);
+  channMix1->addTrack(&sound3, bit * 3);
+  channMix1->addTrack(&sound2, bit * 4);
+  channMix1->addTrack(&sound2, bit * 5);
+  channMix1->addTrack(&sound3, bit * 6);
+  channMix1->addTrack(&sound2, bit * 7);
   AudioEventLoop* loopEvent = new AudioEventLoop();
   loopEvent->setVariable<float>("StartLoopTime", 0.0f);
-  channMix2->addEvent(loopEvent, bit * 8);
+  channMix1->addEvent(loopEvent, bit * 8);
+
+
+  auto loopEvent2 = new AudioEventLoop();
+  loopEvent2->setVariable<float>("StartLoopTime", bit * 32);
+
+  auto channMix2 = mixer.addChannel();
+  channMix2->addTrack(&NoteF, bit * 32);
+  channMix2->addTrack(&NoteD, bit * 48);
+  channMix2->addTrack(&NoteG, bit * 64);
+  channMix2->addTrack(&NoteAS, bit * 80);
+  channMix2->addTrack(&NoteC, bit * 88);
+
+  channMix2->addEvent(loopEvent2, bit * 96);
 
 
   auto channMix3 = mixer.addChannel();
-  channMix3->addTrack(&NoteF, bit * 32);
   channMix3->addTrack(&NoteA, bit * 32);
-  channMix3->addTrack(&NoteC, bit * 32);
-
-  channMix3->addTrack(&NoteD, bit * 48);
   channMix3->addTrack(&NoteF, bit * 48);
-  channMix3->addTrack(&NoteA, bit * 48);
-
-  channMix3->addTrack(&NoteG, bit * 64);
   channMix3->addTrack(&NoteAS, bit * 64);
-  channMix3->addTrack(&NoteD, bit * 64);
-
-  channMix3->addTrack(&NoteAS, bit * 80);
   channMix3->addTrack(&NoteD, bit * 80);
-  channMix3->addTrack(&NoteF, bit * 80);
-
-  channMix3->addTrack(&NoteC, bit * 88);
   channMix3->addTrack(&NoteE, bit * 88);
-  channMix3->addTrack(&NoteG,  bit * 88);
-  AudioEventLoop* loopEvent2 = new AudioEventLoop();
-  loopEvent2->setVariable<float>("StartLoopTime", bit * 32);
+
   channMix3->addEvent(loopEvent2, bit * 96);
 
-  //auto channMix4 = mixer.addChannel();
+
+  auto channMix4 = mixer.addChannel();
+  channMix4->addTrack(&NoteC, bit * 32);
+  channMix4->addTrack(&NoteA, bit * 48);
+  channMix4->addTrack(&NoteD, bit * 64);
+  channMix4->addTrack(&NoteF, bit * 80);
+  channMix4->addTrack(&NoteG,  bit * 88);
+
+  channMix4->addEvent(loopEvent2, bit * 96);
 
 
 
@@ -306,7 +313,7 @@ main()
   // but if it is too small we get problems in the sound
   // In this case we will aim for a latency of 100ms
   // i.e. sampleRate * durationInSeconds = 44100 * 0.1 = 4410
-  info.decodebuffersize = DEF_FREQ * 0.1f;
+  info.decodebuffersize = static_cast<U32>(DEF_FREQ * 0.1f);
   // Specify the callback function that will provide the audio data
   info.pcmreadcallback = WriteSoundData;
 
@@ -325,17 +332,17 @@ main()
 
 
 
-  float wheelDelta = 0.0f;
-  bool ctrlPressed = false;
-  bool shiftPressed = false;
+  //int wheelDelta = 0;
+  //bool ctrlPressed = false;
+  //bool shiftPressed = false;
 
   sf::Vector2u screenSize {1280, 720};
   sf::RenderWindow window(sf::VideoMode(screenSize.x, screenSize.y), "SFML works!");
   window.setFramerateLimit(60);
   ImGui::SFML::Init(window);
 
-  SoundWaveDisplay soundDisp(screenSize);
-  soundDisp.addSoundToDisplay(&sound);
+  //SoundWaveDisplay soundDisp(screenSize);
+  //soundDisp.addSoundToDisplay(&sound);
   //soundDisp.addSoundToDisplay(&sound2);
   //soundDisp.addSoundToDisplay(&sound1_1);
   //soundDisp.addSoundToDisplay(&sound1_2);
@@ -343,32 +350,33 @@ main()
 
   sf::Clock deltaClock;
   while (window.isOpen()) {
-    wheelDelta = 0.0f;
+    //wheelDelta = 0;
     sf::Event event;
     while (window.pollEvent(event)) {
       ImGui::SFML::ProcessEvent(window, event);
-
-      if (event.type == sf::Event::Closed)
+    //
+      if (event.type == sf::Event::Closed) {
         window.close();
-      else if (event.type == sf::Event::MouseWheelMoved) {
-        wheelDelta = event.mouseWheel.delta;
       }
-      else if (event.type == sf::Event::KeyPressed) {
-        if (event.key.code == sf::Keyboard::LControl) {
-          ctrlPressed = true;
-        }
-        else if (event.key.code == sf::Keyboard::LShift) {
-          shiftPressed = true;
-        }
-      }
-      else if (event.type == sf::Event::KeyReleased) {
-        if (event.key.code == sf::Keyboard::LControl) {
-          ctrlPressed = false;
-        }
-        else if (event.key.code == sf::Keyboard::LShift) {
-          shiftPressed = false;
-        }
-      }
+    //  else if (event.type == sf::Event::MouseWheelMoved) {
+    //    wheelDelta = event.mouseWheel.delta;
+    //  }
+    //  else if (event.type == sf::Event::KeyPressed) {
+    //    if (event.key.code == sf::Keyboard::LControl) {
+    //      ctrlPressed = true;
+    //    }
+    //    else if (event.key.code == sf::Keyboard::LShift) {
+    //      shiftPressed = true;
+    //    }
+    //  }
+    //  else if (event.type == sf::Event::KeyReleased) {
+    //    if (event.key.code == sf::Keyboard::LControl) {
+    //      ctrlPressed = false;
+    //    }
+    //    else if (event.key.code == sf::Keyboard::LShift) {
+    //      shiftPressed = false;
+    //    }
+    //  }
     }
 
     sf::Time deltaTime = deltaClock.restart();
@@ -376,21 +384,21 @@ main()
 
     mixer.update(deltaTime.asSeconds());
 
-    if (ctrlPressed) {
-      soundDisp.zoom(wheelDelta);
-    }
-    else if (shiftPressed) {
-      soundDisp.expand(wheelDelta);
-    }
-    else {
-      soundDisp.scroll(wheelDelta);
-    }
-
+    //if (ctrlPressed) {
+    //  soundDisp.zoom(wheelDelta);
+    //}
+    //else if (shiftPressed) {
+    //  soundDisp.expand(wheelDelta);
+    //}
+    //else {
+    //  soundDisp.scroll(wheelDelta);
+    //}
+    
     if (m_fmodSystem) m_fmodSystem->update();
 
     window.clear();
 
-    soundDisp.render(&window);
+    //soundDisp.render(&window);
 
     ImGui::SFML::Render(window);
     window.display();

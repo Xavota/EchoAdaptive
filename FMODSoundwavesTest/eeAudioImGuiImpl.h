@@ -1,15 +1,17 @@
 #pragma once
 
+#include <SFML/Graphics.hpp>
+
 class SoundMixer;
 class SoundMixerChannel;
 
 class AudioImGuiImpl
 {
  public:
-  AudioImGuiImpl() = default;
+  AudioImGuiImpl();
   ~AudioImGuiImpl() = default;
 
   void
-  drawUI(SoundMixer* mixerTool, int& pushID);
+  drawUI(sf::RenderWindow* window, SoundMixer* mixerTool, int& pushID);
 };
 

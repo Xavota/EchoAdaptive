@@ -3,7 +3,7 @@
 void
 BlurSoundEffect::applyPreEffect(float* data, U32& count)
 {
-  for (int i = 0; i < count; ++i) {
+  for (U32 i = 0; i < count; ++i) {
     float totalSum = data[i];
     int sumCount = 1;
     for (int j = 1; j <= rad; ++j) {

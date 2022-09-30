@@ -24,7 +24,7 @@ public:
   {
     sound = mySound;
   }
-  inline const FMODSound const*
+  inline const FMODSound*
   getSound() const
   {
     return sound;
@@ -35,9 +35,14 @@ public:
     startPosition = startPCM;
   }
   float
-  getStartPosition()
+  getStartPosition() const
   {
     return startPosition;
+  }
+  float
+  getStartPositionSec() const
+  {
+    return startPosition / DEF_FREQ;
   }
   void
   writeSoundData(float* data, int i);
@@ -62,7 +67,7 @@ public:
   }
 
   float
-  getPositionSec()
+  getPositionSec() const
   {
     if (sound) {
       return position / sound->samplingRate;
@@ -72,45 +77,46 @@ public:
     }
   }
   float
-  getPositionFreq()
+  getPositionFreq() const
   {
     return position;
   }
   float
-  getMaxPositionSec()
+  getMaxPositionSec() const
   {
     if (sound) {
-      return sound->count / (sound->samplingRate * sound->numChannels);
+      return static_cast<float>(sound->count) / (sound->samplingRate * sound->numChannels);
     }
     else {
-      return 0;
+      return 0.0f;
     }
   }
   float
-  getMaxPositionFreq()
+  getMaxPositionFreq() const
   {
     if (sound) {
-      return sound->count / sound->numChannels;
+      return static_cast<float>(sound->count / sound->numChannels);
     }
     else {
-      return 0;
+      return 0.0f;
     }
   }
   void
   seek(float second)
   {
     if (sound) {
-      seekFreq(second * sound->samplingRate);
+      seekFreq(static_cast<U32>(second) * sound->samplingRate);
     }
     else {
-      seekFreq(second * DEF_FREQ);
+      seekFreq(static_cast<U32>(second) * DEF_FREQ);
     }
   }
   void
   seekFreq(U32 freq)
   {
-    position = freq;
+    position = static_cast<float>(freq);
   }
+
 
  private:
   void

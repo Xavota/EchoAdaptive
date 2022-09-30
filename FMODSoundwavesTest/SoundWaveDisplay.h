@@ -3,7 +3,7 @@
 
 #include <vector>
 
-class FMODSound;
+struct FMODSound;
 
 class SoundWaveDisplay
 {
