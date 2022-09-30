@@ -48,7 +48,7 @@ drawChannel(SoundMixerChannel* chann, int& pushID)
 {
   float startPosY = ImGui::GetCursorPosY();
   float startPosX= ImGui::GetCursorPosX();
-  ImGui::Text(std::to_string(0).c_str());
+  ImGui::Text(chann->getName().c_str());
 
   ImGui::PushID(pushID++);
   ImGui::PushItemWidth(gChannelItemsWidth);

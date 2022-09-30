@@ -14,7 +14,7 @@ class SoundMixer
   ~SoundMixer() = default;
 
   SoundMixerChannel*
-  addChannel();
+  addChannel(const std::string& name = "");
 
   inline SoundMixerChannel*
   getChannel(uint32_t channelIndex)

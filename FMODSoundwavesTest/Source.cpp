@@ -238,11 +238,8 @@ main()
 
 
   float bit = 0.25f;
-  //uint32_t channMix1 = mixer.addChannel();
-  //mixer.setChannelPaused(channMix1, false);
-  //mixer.addChannelTrack(channMix1, &sound);
-  auto channMix1 = mixer.addChannel();
 
+  auto channMix1 = mixer.addChannel("Percussion");
   channMix1->addTrack(&sound3, bit * 0);
   channMix1->addTrack(&sound2, bit * 1);
   channMix1->addTrack(&sound2, bit * 2);
@@ -259,7 +256,7 @@ main()
   auto loopEvent2 = new AudioEventLoop();
   loopEvent2->setVariable<float>("StartLoopTime", bit * 32);
 
-  auto channMix2 = mixer.addChannel();
+  auto channMix2 = mixer.addChannel("Chords 1");
   channMix2->addTrack(&NoteF, bit * 32);
   channMix2->addTrack(&NoteD, bit * 48);
   channMix2->addTrack(&NoteG, bit * 64);
@@ -269,7 +266,7 @@ main()
   channMix2->addEvent(loopEvent2, bit * 96);
 
 
-  auto channMix3 = mixer.addChannel();
+  auto channMix3 = mixer.addChannel("Chords 2");
   channMix3->addTrack(&NoteA, bit * 32);
   channMix3->addTrack(&NoteF, bit * 48);
   channMix3->addTrack(&NoteAS, bit * 64);
@@ -279,7 +276,7 @@ main()
   channMix3->addEvent(loopEvent2, bit * 96);
 
 
-  auto channMix4 = mixer.addChannel();
+  auto channMix4 = mixer.addChannel("Chords 3");
   channMix4->addTrack(&NoteC, bit * 32);
   channMix4->addTrack(&NoteA, bit * 48);
   channMix4->addTrack(&NoteD, bit * 64);

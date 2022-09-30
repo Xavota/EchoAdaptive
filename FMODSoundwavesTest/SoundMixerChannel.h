@@ -126,6 +126,17 @@ class SoundMixerChannel
   void
   restart();
 
+  inline void
+  setName(const std::string& newName)
+  {
+    m_name = newName;
+  }
+  inline const std::string&
+  getName() const
+  {
+    return m_name;
+  }
+
  private:
   void
   updatePan();
@@ -155,5 +166,7 @@ class SoundMixerChannel
 
 
   bool m_playOnStart = true;
+
+  std::string m_name;
 };
 

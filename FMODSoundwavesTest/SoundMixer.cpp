@@ -1,11 +1,12 @@
 #include "SoundMixer.h"
 
 SoundMixerChannel*
-SoundMixer::addChannel()
+SoundMixer::addChannel(const std::string& name)
 {
   auto index = static_cast<U32>(m_channels.size());
   m_channels.emplace_back(SoundMixerChannel());
   m_channels[index].setChannelIndex(index);
+  m_channels[index].setName(name);
   return &m_channels[index];
 }
 
