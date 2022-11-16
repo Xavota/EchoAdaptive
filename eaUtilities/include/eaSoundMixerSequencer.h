@@ -4,8 +4,6 @@
 #include <vector>
 
 namespace eaSdkEngine {
-static const char* SequencerItemTypeNames[] = { "Camera","Music", "ScreenEffect", "FadeIn", "Animation" };
-
 class SoundMixer;
 
 class SoundMixerSequencer : public ImSequencer::SequenceInterface
@@ -22,18 +20,7 @@ public:
 
   int GetCurrentFrame(int index) const override;
   int GetFirtsFrame(int index) const override;
-
-  inline int
-  GetItemTypeCount() const override
-  {
-    return sizeof(SequencerItemTypeNames) / sizeof(char*);
-  }
-  inline const char*
-  GetItemTypeName(int typeIndex) const override
-  {
-    return SequencerItemTypeNames[typeIndex];
-  }
-  const char*
+  std::string
   GetItemLabel(int index) const override;
 
   void
@@ -46,15 +33,42 @@ public:
       int* dataChannels,
       int* type,
       unsigned int* color) override;
+  uint32
+  getTrackStart(uint32 index, uint32 trackIndex) override;
+  void
+  setTrackStart(uint32 index, uint32 trackIndex, uint32 start) override;
+  uint32
+  getTrackEnd(uint32 index, uint32 trackIndex) override;
+  void
+  setTrackEnd(uint32 index, uint32 trackIndex, uint32 end) override;
+  float*
+  getTrackData(uint32 index, uint32 trackIndex) override;
+  uint32
+  getTrackDataCount(uint32 index, uint32 trackIndex) override;
+  uint32
+  getTrackChannelsCount(uint32 index, uint32 trackIndex) override;
+  uint32
+  getTrackColor(uint32 index, uint32 trackIndex) override;
+  void
+  setTrackColor(uint32 index, uint32 trackIndex, uint32 color) override;
+
+  uint32
+  getChannelStart(uint32 index) override;
+  void
+  setChannelStart(uint32 index, uint32 start) override;
+  uint32
+  getChannelEnd(uint32 index) override;
+  void
+  setChannelEnd(uint32 index, uint32 end) override;
+  uint32
+  getChannelSize(uint32 index) override;
+
   inline void
   Add(int type) override { myItems.push_back(MySequenceItem{ type, 0, 10, false }); };
   inline void
   Del(int index) override { myItems.erase(myItems.begin() + index); }
   inline void
   Duplicate(int index) override { myItems.push_back(myItems[index]); }
-
-  void
-  SetStart(int index, int trackIndex, int newStart) override;
 
   int
   GetEventCount(int index) const override;
@@ -81,6 +95,19 @@ public:
   };
   std::vector<MySequenceItem> myItems;
 
+  struct TrackDisplayInfo
+  {
+    uint32 color = 0xFFAA8080;
+  };
+
+  struct ChannelDisplayInfo
+  {
+    uint32 startPosition = 0;
+    uint32 endPosition = 0;
+    std::vector<TrackDisplayInfo> tracksInfo;
+  };
+
+  std::vector<ChannelDisplayInfo> m_channelsInfo;
 
   SoundMixer* m_mixer = nullptr;
 };

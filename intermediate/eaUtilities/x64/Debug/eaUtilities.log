@@ -1,23 +1,2 @@
-﻿  imgui_impl_dx11.cpp
-  imgui_impl_win32.cpp
-  ImCurveEdit.cpp
-  imgui.cpp
-  imgui_demo.cpp
-  imgui_draw.cpp
-  imgui_tables.cpp
-  imgui_widgets.cpp
-  ImSequencer.cpp
-D:\Externals\imgui\ImSequencer.cpp(501,99): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-D:\Externals\imgui\ImSequencer.cpp(525,102): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-  eaSound.cpp
-  eaSoundEvent.cpp
-  eaSoundEventLoop.cpp
-  eaSoundMixer.cpp
-  eaSoundMixerChannel.cpp
-  eaSoundMixerEventGraph.cpp
-  eaSoundTrack.cpp
-  eaVariableClass.cpp
-  eaSoundMixerSequencer.cpp
-  main.cpp
-  Generating Code...
+﻿  ImSequencer.cpp
   eaUtilities.vcxproj -> D:\GitHub\EchoAdaptive\bin\x64\eaUtilitiesd.exe

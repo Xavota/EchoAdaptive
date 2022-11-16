@@ -661,8 +661,8 @@ drawSequencerTest()
     // add a UI to edit that particular item
     if (selectedEntry != -1)
     {
-      const auto& item = gSequence.myItems[selectedEntry];
-      ImGui::Text("I am a %s, please edit me", eaSdkEngine::SequencerItemTypeNames[item.type]);
+      //const auto& item = gSequence.myItems[selectedEntry];
+      //ImGui::Text("I am a %s, please edit me", eaSdkEngine::SequencerItemTypeNames[item.type]);
       // switch (type) ....
     }
   }
