@@ -192,17 +192,17 @@ SoundMixerSequencer::GetItemTrackCount(int index) const
   }
   return 0;
 }
-int
+uint32
 SoundMixerSequencer::GetCurrentFrame(int index) const
 {
   if (m_mixer)
   {
     const auto& chann = m_mixer->getChannel(index);
-    return static_cast<int>(chann->getTimePositionFreq());
+    return static_cast<uint32>(chann->getTimePositionFreq());
   }
   return 0;
 }
-int
+uint32
 SoundMixerSequencer::GetFirtsFrame(int /*index*/) const
 {
   return 0;
@@ -213,23 +213,23 @@ SoundMixerSequencer::GetItemLabel(int index) const
   if (m_mixer) return m_mixer->getChannel(index)->getName();
   return "";
 }
-int
+uint32
 SoundMixerSequencer::GetEventCount(int index) const
 {
   if (m_mixer)
   {
-    return static_cast<int>(m_mixer->getChannel(index)->getEvents().size());
+    return static_cast<uint32>(m_mixer->getChannel(index)->getEvents().size());
   }
   return 0;
 }
-int
+uint32
 SoundMixerSequencer::GetEventPos(int index, int eventID) const
 {
   if (m_mixer)
   {
     auto& events = m_mixer->getChannel(index)->getEvents();
   
-    return static_cast<int>(events[eventID]->getFirstTime());
+    return static_cast<uint32>(events[eventID]->getFirstTime());
   }
   return 0;
 }

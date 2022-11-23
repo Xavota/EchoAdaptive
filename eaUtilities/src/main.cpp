@@ -631,9 +631,7 @@ drawSequencerTest()
   if (ImGui::Begin("SequencerTestWindow"))
   {
     // let's create the sequencer
-    static int selectedEntry = -1;
     static int firstFrame = 0;
-    static bool expanded = true;
     static int currentFrame = 100;
 
     if (gMixer.getIsPaused() || !gMixer.getIsPlaying()) {
@@ -657,14 +655,13 @@ drawSequencerTest()
     ImGui::SameLine();
     ImGui::InputInt("Frame Max", &gSequence.m_frameMax);
     ImGui::PopItemWidth();
-    Sequencer(&gSequence, &expanded, &selectedEntry, &firstFrame, ImSequencer::SEQUENCER_EDIT_STARTEND | ImSequencer::SEQUENCER_ADD | ImSequencer::SEQUENCER_DEL | ImSequencer::SEQUENCER_COPYPASTE | ImSequencer::SEQUENCER_CHANGE_FRAME);
-    // add a UI to edit that particular item
-    if (selectedEntry != -1)
-    {
-      //const auto& item = gSequence.myItems[selectedEntry];
-      //ImGui::Text("I am a %s, please edit me", eaSdkEngine::SequencerItemTypeNames[item.type]);
-      // switch (type) ....
-    }
+    Sequencer(&gSequence,
+              &firstFrame,
+              ImSequencer::SEQUENCER_EDIT_STARTEND
+            | ImSequencer::SEQUENCER_ADD
+            | ImSequencer::SEQUENCER_DEL
+            | ImSequencer::SEQUENCER_COPYPASTE
+            | ImSequencer::SEQUENCER_CHANGE_FRAME);
   }
   ImGui::End();
 }

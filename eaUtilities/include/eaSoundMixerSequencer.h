@@ -18,8 +18,10 @@ public:
   int
   GetItemTrackCount(int index) const override;
 
-  int GetCurrentFrame(int index) const override;
-  int GetFirtsFrame(int index) const override;
+  uint32
+  GetCurrentFrame(int index) const override;
+  uint32
+  GetFirtsFrame(int index) const override;
   std::string
   GetItemLabel(int index) const override;
 
@@ -70,9 +72,9 @@ public:
   inline void
   Duplicate(int index) override { myItems.push_back(myItems[index]); }
 
-  int
+  uint32
   GetEventCount(int index) const override;
-  int
+  uint32
   GetEventPos(int index, int eventID) const override;
 
   inline size_t
