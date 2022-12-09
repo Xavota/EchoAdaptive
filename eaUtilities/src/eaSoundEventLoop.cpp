@@ -7,7 +7,7 @@ namespace eaSdkEngine {
 void
 SoundEventLoop::triggerEvent(SoundMixer* mixer, uint32_t channelIndex)
 {
-  mixer->getChannel(channelIndex)->setTimePositionSec(
+  mixer->getChannel(channelIndex)->setTimePositionFreq(
                                            getVariable<float>("StartLoopTime"));
 }
 

@@ -1,6 +1,2 @@
-﻿  ImSequencer.cpp
-D:\Externals\imgui\ImSequencer.cpp(345,66): warning C4018: '<=': signed/unsigned mismatch
-D:\Externals\imgui\ImSequencer.cpp(374,23): warning C4018: '<': signed/unsigned mismatch
-D:\Externals\imgui\ImSequencer.cpp(378,50): warning C4018: '<=': signed/unsigned mismatch
-D:\Externals\imgui\ImSequencer.cpp(473,18): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+﻿  main.cpp
   eaUtilities.vcxproj -> D:\GitHub\EchoAdaptive\bin\x64\eaUtilitiesd.exe

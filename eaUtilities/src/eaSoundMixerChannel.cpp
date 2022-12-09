@@ -10,9 +10,17 @@ SoundMixerChannel::addTrack(Sound* track, float startingPoint)
 
   m_tracks.emplace_back(SoundTrack());
   m_tracks[index].setSound(track);
-  m_tracks[index].setStartPosition(startingPoint * DEF_FREQ);
+  m_tracks[index].setStartPosition(startingPoint);
   
   return index;
+}
+void
+SoundMixerChannel::removeTrack(uint32 index)
+{
+  if (index < m_tracks.size())
+  {
+    m_tracks.erase(m_tracks.begin() + index); // TODO: Checar si el audio que tiene el track sólo lo tiene él para eliminarlo.
+  }
 }
 void
 SoundMixerChannel::moveTrack(uint32_t index, float startingPoint)
@@ -34,8 +42,8 @@ SoundMixerChannel::addEvent(SoundEvent* audioEvent,
   }
 
   m_events.push_back(audioEvent);
-  audioEvent->setFirstTime(fisrtPos * DEF_FREQ);
-  audioEvent->setLastTime(lastPos * DEF_FREQ);
+  audioEvent->setFirstTime(fisrtPos);
+  audioEvent->setLastTime(lastPos);
 }
 float
 SoundMixerChannel::getTimePositionFreq()
@@ -108,19 +116,25 @@ SoundMixerChannel::writeSoundData(SoundMixer* mixer, float* data, int count)
 
   for (int i = 0; i < count; i += 2) {
     auto truePos = static_cast<U32>(m_position);
-    //std::cout << truePos << std::endl;
     for (auto& t : m_tracks) {
-      if (truePos >= t.getStartPosition()
-       && truePos < t.getStartPosition() + t.getMaxPositionFreq()) {
+      float startPos = t.getStartPosition();
+      if (truePos >= startPos
+       && truePos < startPos + t.getMaxPositionFreq()) {
         t.seekFreq(truePos);
-        float* newData = new float[count];
-        memset(newData, 0, count * sizeof(float));
-        t.writeSoundData(newData, i);
+        //float* newData = new float[count];
+        //memset(newData, 0, count * sizeof(float));
+        //t.writeSoundData(newData, i);
+        //
+        //data[i] += newData[i] * m_volume * m_leftGain;
+        //data[i + 1] += newData[i + 1] * m_volume * m_rightGain;
+        //
+        //delete[] newData;
 
-        data[i] += newData[i] * m_volume * m_leftGain;
-        data[i + 1] += newData[i + 1] * m_volume * m_rightGain;
+        float ldata, rdata;
+        t.getSoundData(ldata, rdata);
 
-        delete[] newData;
+        data[i] += ldata * m_volume * m_leftGain;
+        data[i + 1] += rdata * m_volume * m_rightGain;
       }
     }
 

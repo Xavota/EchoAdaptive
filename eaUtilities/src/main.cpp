@@ -628,7 +628,17 @@ SoundMixerSequencer gSequence;
 void
 drawSequencerTest()
 {
-  if (ImGui::Begin("SequencerTestWindow"))
+  ImGuiWindowFlags window_flags = 0;
+  window_flags |= ImGuiWindowFlags_NoTitleBar;
+  window_flags |= ImGuiWindowFlags_NoMove;
+  window_flags |= ImGuiWindowFlags_NoResize;
+  window_flags |= ImGuiWindowFlags_NoCollapse;
+  window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus;
+
+  static bool unsavedDoc = false;
+  if (unsavedDoc) window_flags |= ImGuiWindowFlags_UnsavedDocument;
+
+  if (ImGui::Begin("SequencerTestWindow", nullptr, window_flags))
   {
     // let's create the sequencer
     static int firstFrame = 0;
@@ -656,7 +666,6 @@ drawSequencerTest()
     ImGui::InputInt("Frame Max", &gSequence.m_frameMax);
     ImGui::PopItemWidth();
     Sequencer(&gSequence,
-              &firstFrame,
               ImSequencer::SEQUENCER_EDIT_STARTEND
             | ImSequencer::SEQUENCER_ADD
             | ImSequencer::SEQUENCER_DEL
@@ -674,10 +683,12 @@ uiRender()
 
   ImGui::NewFrame();
 
-  int pushID = 0;
-  drawSoundMixerUI(pushID);
+  //int pushID = 0;
+  //drawSoundMixerUI(pushID);
 
   drawSequencerTest();
+
+  //ImGui::ShowDemoWindow();
 
   ImGui::Render();
 
@@ -800,7 +811,7 @@ main()
 
 
 
-  float bit = 0.25f;
+  float bit = 0.25f * DEF_FREQ;
 
   auto channMix1 = gMixer.addChannel("Percussion");
   channMix1->addTrack(&sound3, bit * 0);

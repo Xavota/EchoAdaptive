@@ -30,6 +30,11 @@ public:
   {
     return sound;
   }
+  inline Sound*
+  getSoundPtr() // TODO: Find a way to do this better. Can't be two functions that do the same. Use SPtr or something to keep track of the sounds instances.
+  {
+    return sound;
+  }
   void
   setStartPosition(float startPCM)
   {
@@ -47,6 +52,8 @@ public:
   }
   void
   writeSoundData(float* data, int i);
+  void
+  getSoundData(float& ldata, float& rdata);
 
   float
   getVolume() const { return volume; }

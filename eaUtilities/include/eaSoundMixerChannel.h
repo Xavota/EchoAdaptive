@@ -23,6 +23,8 @@ class SoundMixerChannel
 
   uint32_t
   addTrack(Sound* track, float startingPoint = 0.0f);
+  void
+  removeTrack(uint32 index);
 
   void
   moveTrack(uint32_t index, float startingPoint);
